@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>✨ Gistify AI (or Your Chosen Name) ✨</h1>
+  <h1>✨ TextTidy ✨</h1>
   <p><strong>A beautifully simple, lightning-fast browser extension that turns long text into bite-sized summaries using the power of Google Gemini.</strong></p>
 </div>
 
