@@ -1,0 +1,45 @@
+# AI Text Summarizer Extension - Project Overview
+
+## 1. What is this project?
+This project is a Microsoft Edge/Google Chrome browser extension designed to help users quickly summarize long blocks of text on any webpage. When a user highlights text, a floating "Summarize with AI" button appears. Clicking it sends the text to the Google Gemini AI model, which returns a concise 3-bullet-point summary displayed in a sleek floating popup. 
+
+## 2. Technology Stack & Tools Used
+*   **HTML/CSS/JavaScript (Vanilla):** The core languages used to build the extension. No heavy frontend frameworks (like React or Vue) are used, ensuring the extension is extremely lightweight and fast.
+*   **Manifest V3:** The latest architecture version for building browser extensions, providing better security, privacy, and performance.
+*   **Google Gemini API:** The AI engine powering the summarization. Specifically, the `gemini-2.5-flash-lite` model is used because it provides lightning-fast responses and is optimized for generous free-tier API usage.
+*   **Service Workers:** Used to manage the background tasks independently of the web pages the user visits.
+
+## 3. Architecture & Core Components
+The extension is built using the standard Manifest V3 architecture, consisting of the following key files:
+
+*   **`manifest.json`:** The configuration file that tells the browser what the extension is, what permissions it needs (like `activeTab`, `contextMenus`, and `storage`), and which scripts to run.
+*   **`content.js`:** The "frontend" script that gets injected into every webpage the user visits. It interacts directly with the Document Object Model (DOM). It listens for mouse selections, renders the floating "Summarize" button, builds the popup UI, and sends the selected text to the background script.
+*   **`styles.css`:** Contains all the styling rules for the floating button, loading spinner, and the final summary popup, ensuring it looks modern and clean without breaking the host website's CSS.
+*   **`background.js`:** The "backend" service worker of the extension. It runs invisibly in the browser's background. It handles the secure API calls to Google Gemini, enforces rate limiting, and manages the right-click Context Menu option.
+*   **`test_api.js`:** A standalone Node.js utility script used purely for testing the Gemini API key and model endpoints from the terminal.
+
+## 4. Flow Design & User Journey
+
+### Flow A: The Floating Button (Main Flow)
+1.  **Selection:** The user highlights text (at least 20 characters) on any webpage.
+2.  **Detection:** `content.js` detects the `mouseup` event. It calculates the exact coordinates of the highlighted text on the screen.
+3.  **UI Render:** `content.js` injects the floating "Summarize" button slightly above/below the highlighted text.
+4.  **Trigger:** The user clicks the button. The button disappears, and a "Loading" popup with a spinner appears in its place.
+5.  **Message Passing:** `content.js` sends an asynchronous message containing the text to `background.js` using `chrome.runtime.sendMessage()`.
+6.  **API Call:** `background.js` receives the text. It first checks its internal rate-limiter (to prevent spam). If clear, it packages the text into a strict prompt ("Summarize the following text in 3 concise bullet points...") and sends an HTTP POST request to the Gemini API.
+7.  **Response:** The Gemini API processes the prompt and returns the AI-generated text.
+8.  **Display:** `background.js` sends the summary back to `content.js`. `content.js` updates the popup UI to display the summary, along with a "Copy" button and token usage data.
+
+### Flow B: The Context Menu (Alternative Flow)
+1.  **Selection:** The user highlights text.
+2.  **Right-Click:** The user right-clicks the text and selects "Summarize with AI" from the native browser context menu.
+3.  **Detection:** `background.js` detects the context menu click event.
+4.  **Message Passing:** `background.js` sends a message to the active tab's `content.js` telling it to force-trigger the summarize flow for the selected text.
+5.  **Continuation:** The flow merges into Step 3 of Flow A, displaying the popup at the center of the screen or near the selection.
+
+## 5. Key Features & Edge Case Handling
+*   **Debouncing:** `content.js` uses a 300ms debounce timer when listening for text selections. This ensures the extension doesn't freeze the browser if the user is wildly dragging their mouse.
+*   **Viewport Boundaries:** The popup calculates its position dynamically. If the user selects text at the very edge of the screen, the popup shifts itself so it never gets cut off or goes off-screen.
+*   **Rate Limiting:** `background.js` enforces a strict 1.5-second gap between requests to prevent accidental double-clicks from spamming the Gemini API.
+*   **Error Handling:** If the Gemini API returns a 429 (Rate Limit), 403 (Invalid Key), or if the user goes offline, graceful error messages are displayed directly inside the popup UI instead of failing silently.
+*   **Click-Away Dismissal:** Clicking anywhere outside the popup or pressing the `Escape` key immediately destroys the DOM elements to keep the webpage clean.

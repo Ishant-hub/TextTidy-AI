@@ -1,0 +1,5 @@
+# Ignore local test scripts with API keys
+test_api.js
+
+# Ignore environment variables if used later
+.env
