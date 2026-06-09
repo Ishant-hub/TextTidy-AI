@@ -14,8 +14,8 @@ This is a lightweight browser extension (works on both Chrome and Edge) that let
 ## 🚀 Why you'll love it
 
 * **The Floating Button:** Just highlight any text (20+ characters), and a sleek little "Summarize" button pops up right next to your cursor.
-* **Right-Click Friendly:** Old school? No problem. Highlight your text, right-click, and select "Summarize with AI".
-* **Blink-and-you-miss-it Speed:** It uses the `gemini-2.5-flash-lite` model under the hood, meaning you get answers almost instantly without lagging your browser.
+* **Right-Click Friendly:**Highlight your text, right-click, and select "Summarize with AI".
+* **Speed:** It uses the `gemini-2.5-flash-lite` model under the hood, meaning you get answers almost instantly without lagging your browser.
 * **Smart UI:** The summary popup calculates its own position, ensuring it never gets cut off at the edge of your screen.
 * **Zero Bloat:** Built with pure Vanilla HTML, CSS, and JavaScript. No heavy frameworks. It's clean, fast, and does exactly what it says on the tin.
 
@@ -57,8 +57,6 @@ To wake the AI up, you'll need your own Google Gemini API Key. Don't worry, it's
 4. The response travels back to **`content.js`**, which beautifully animates the 3-bullet summary onto your screen.
 
 ## 🤝 Want to contribute?
-
 Feel free to fork this project, submit a pull request, or open an issue if you find a bug. Whether it's making the UI even sleeker or adding new features, contributions are always welcome!
-
 ---
 *Built with ❤️ to make reading the web a whole lot easier.*
