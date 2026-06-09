@@ -9,7 +9,7 @@
 
 Ever found yourself staring at a giant wall of text and thought, *"I just need the TL;DR!"*? That's exactly why this extension exists. 
 
-This is a lightweight browser extension (works on both Chrome and Edge) that lets you highlight any text on any webpage and instantly get a concise, 3-bullet-point summary. It feels like magic, right in your browser.
+This is a lightweight browser extension (works on both Chrome and Edge) that lets you highlight any text on any webpage and instantly get a concise, 3-bullet-point summary.
 
 ## 🚀 Why you'll love it
 
